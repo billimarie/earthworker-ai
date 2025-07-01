@@ -1,103 +1,168 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useRef, useEffect, type FormEvent } from "react";
+import { LoaderCircle, Send } from "lucide-react";
+
+import { handleQuery, type ChatMessage as Message } from "./actions";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import Header from "@/components/header";
+import CarbonTracker from "@/components/carbon-tracker";
+import AdsenseBanner from "@/components/adsense-banner";
+import ChatMessage from "@/components/chat-message";
+import QuerySuggestions from "@/components/query-suggestions";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { toast } = useToast();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
+        top: scrollAreaRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages]);
+
+  const processQuery = async (query: string) => {
+    if (!query.trim()) return;
+
+    setIsLoading(true);
+    setSuggestions([]);
+    setMessages((prev) => [...prev, { role: "user", content: query }]);
+
+    try {
+      const result = await handleQuery(query);
+
+      if (result.type === "suggestions") {
+        setSuggestions(result.data as string[]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "system",
+            content:
+              "Your query seems a bit ambiguous. Here are some suggestions to clarify it:",
+          },
+        ]);
+      } else if (result.type === "response") {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: result.data as string },
+        ]);
+      } else if (result.type === "error") {
+        setMessages((prev) => [
+          ...prev,
+          { role: "system", content: result.data as string },
+        ]);
+        toast({
+          variant: "destructive",
+          title: "An error occurred",
+          description: result.data as string,
+        });
+      }
+    } catch (e) {
+      const errorMessage =
+        e instanceof Error ? e.message : "An unexpected error occurred.";
+      setMessages((prev) => [
+        ...prev,
+        { role: "system", content: errorMessage },
+      ]);
+      toast({
+        variant: "destructive",
+        title: "An error occurred",
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await processQuery(input);
+    setInput("");
+  };
+
+  const handleSuggestionClick = async (suggestion: string) => {
+    setInput(suggestion);
+    await processQuery(suggestion);
+    setInput("");
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-1 flex flex-col md:flex-row gap-8 p-4 md:p-8">
+        <div className="flex-1 flex flex-col gap-6">
+          <Card className="flex-1 flex flex-col">
+            <CardContent className="flex-1 flex flex-col p-4 md:p-6">
+              <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
+                <div className="space-y-6">
+                  {messages.length === 0 && (
+                    <ChatMessage
+                      role="assistant"
+                      content="Hello! How can I help you today? Ask me anything."
+                    />
+                  )}
+                  {messages.map((msg, index) => (
+                    <ChatMessage key={index} {...msg} />
+                  ))}
+                  {suggestions.length > 0 && (
+                    <QuerySuggestions
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+              <form
+                onSubmit={handleSubmit}
+                className="mt-6 flex items-start gap-4 border-t pt-6"
+              >
+                <Textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask a question about sustainability or anything else..."
+                  className="flex-1 resize-none"
+                  rows={2}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                  disabled={isLoading}
+                />
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isLoading || !input.trim()}
+                  aria-label="Send message"
+                >
+                  {isLoading ? (
+                    <LoaderCircle className="animate-spin" />
+                  ) : (
+                    <Send />
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
+        <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
+          <CarbonTracker />
+          <AdsenseBanner />
+        </aside>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }

@@ -6,8 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Adsense from "./adsense";
 
 export default function AdsenseBanner() {
+  const adSlot = "9214589741";
+
   return (
     <Card className="bg-muted/50">
       <CardHeader>
@@ -20,8 +23,12 @@ export default function AdsenseBanner() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-center h-40 bg-background/50 rounded-lg">
-          <p className="text-sm text-muted-foreground">Ad placeholder</p>
+        <div className="flex items-center justify-center h-40 bg-background/50 rounded-lg overflow-hidden">
+          <Adsense
+            adSlot={adSlot}
+            style={{ display: "block" }}
+            className="w-full h-full"
+          />
         </div>
       </CardContent>
     </Card>

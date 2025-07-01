@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Sustainable AI',
-  description: 'AI with a focus on sustainability and carbon offsetting.',
+  title: 'Earthcare AI',
+  description: 'AI that regenerates desertified land via wildlife habitat creation, carbon offsetting, and water liter savings.',
 };
 
 export default function RootLayout({

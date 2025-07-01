@@ -98,6 +98,8 @@ export default function Home() {
     setInput("");
   };
 
+  const queryCount = messages.filter((msg) => msg.role === "user").length;
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -159,7 +161,7 @@ export default function Home() {
           </Card>
         </div>
         <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
-          <CarbonTracker />
+          <CarbonTracker queryCount={queryCount} />
           <AdsenseBanner />
         </aside>
       </main>

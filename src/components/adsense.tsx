@@ -31,7 +31,7 @@ const Adsense: React.FC<AdsenseProps> = ({
     }
   }, []);
 
-  const adClientId = "ca-pub-3940256099942544";
+  const adClientId = "ca-pub-9937772838198466";
 
   return (
     <div className={className}>

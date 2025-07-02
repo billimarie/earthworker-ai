@@ -1,94 +1,94 @@
 // functions/src/index.ts
 
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import * as logger from "firebase-functions/logger";
-import { initializeApp } from "firebase-admin/app";
-import { google } from "googleapis";
+// Import initializeApp directly from the 'firebase-admin/app' subpath
+import { initializeApp } from 'firebase-admin/app';
+// Import other parts of admin as needed, e.g., firestore from 'firebase-admin/firestore'
+// import { getFirestore } from 'firebase-admin/firestore'; // For Firestore if you need it later
+import { google, sheets_v4 } from 'googleapis';
+import { firestore } from 'firebase-functions/v2';
+import { logger } from 'firebase-functions';
 
+// Initialize Firebase Admin SDK using the imported initializeApp
 initializeApp();
 
-const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
-const SPREADSHEET_ID = "1YL97W4EYs4hKvh8O14QjQXRbuuOh_fZdCW9yZsYZmdc";
+// If you need to access other admin services (like Firestore, Auth, etc.)
+// you'd typically get them after initializeApp() is called:
+// const db = getFirestore(); // Example for Firestore
 
-// --- DEFERRED AUTH INITIALIZATION ---
-let sheets: ReturnType<typeof google.sheets> | null = null;
-let auth: any = null;
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+
+let auth: any;
+let sheets: sheets_v4.Sheets;
 let authInitialized = false;
 
-function ensureSheetsClient() {
+async function ensureSheetsClient() {
   if (authInitialized) {
     return;
   }
 
-  // In Firebase Functions v2, functions.config() variables are
-  // automatically converted into standard environment variables.
-  // Access them directly using process.env.
-  // The name will be the uppercase, dot-to-underscore version:
-  // google.service_account_key_b64  -> GOOGLE_SERVICE_ACCOUNT_KEY_B64
-  const config = process.env.GOOGLE_SERVICE_ACCOUNT_KEY_B64; // <-- CHANGE IS HERE
-
-  if (!config) {
-    logger.error("Service account key (GOOGLE_SERVICE_ACCOUNT_KEY_B64) not found in environment variables. Ensure it's set via 'firebase functions:config:set'.");
-    return;
-  }
-
   try {
-    const decoded = Buffer.from(config, "base64").toString("utf-8");
-    const serviceAccount = JSON.parse(decoded);
-
-    auth = new google.auth.JWT({
-      email: serviceAccount.client_email,
-      key: serviceAccount.private_key,
+    auth = new google.auth.GoogleAuth({
       scopes: SCOPES,
     });
 
-    sheets = google.sheets({ version: "v4", auth });
+    sheets = google.sheets({ version: 'v4', auth });
     authInitialized = true;
-    logger.info("Google Sheets API client initialized successfully.");
+    logger.info("Google Sheets API client initialized successfully using Default Application Credentials.");
   } catch (e) {
-    logger.error("Failed to initialize Sheets API client:", e);
+    logger.error("Failed to initialize Sheets API client using Default Application Credentials:", e);
+    throw new Error("Failed to initialize Sheets API client."); // Re-throw to indicate critical failure
   }
 }
 
-// --- FIRESTORE TRIGGER ---
-
-export const appendFeedbackToSheet = onDocumentCreated(
-  "feedback/{feedbackId}",
+export const appendFeedbackToSheet = firestore.onDocumentCreated(
+  { document: 'feedback/{feedbackId}' },
   async (event) => {
-    // Ensure the client is initialized when the function instance starts
-    // (or on the first invocation if cold start).
-    // This function will only run its initialization logic once.
-    ensureSheetsClient();
+    logger.info("appendFeedbackToSheet: Function triggered.");
 
-    if (!auth || !sheets) {
+    await ensureSheetsClient();
+
+    if (!sheets) {
       logger.error("Sheets client not initialized. Skipping feedback append.");
-      return null;
+      throw new Error("Sheets client not initialized. Cannot append feedback.");
     }
 
-    const snap = event.data;
-    if (!snap) {
-      logger.error("No Firestore snapshot data received.");
-      return null;
+    const newFeedback = event.data?.data();
+
+    if (!newFeedback) {
+      logger.warn("No data found in the Firestore document. Skipping.");
+      return;
     }
 
-    const data = snap.data();
-    const timestamp =
-      data?.createdAt?.toDate?.().toISOString() ?? new Date().toISOString();
-    const row = [timestamp, data?.email ?? "", data?.comment ?? ""];
+    const timestamp = newFeedback.timestamp?.toDate().toISOString() || new Date().toISOString();
+    const email = newFeedback.email || 'N/A';
+    const comment = newFeedback.comment || 'N/A';
+
+    const values = [
+      [timestamp, email, comment],
+    ];
+
+    const spreadsheetId = '1YL97W4EYs4hKvh8O14QjQXRbuuOh_fZdCW9yZsYZmdc';
+    const range = 'Sheet1!A:C';
 
     try {
-      await auth.authorize();
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: SPREADSHEET_ID,
-        range: "Sheet1!A:C",
-        valueInputOption: "USER_ENTERED",
-        requestBody: { values: [row] },
+      const response = await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+          values,
+        },
       });
-      logger.info(`Feedback appended to Google Sheet: ${row}`);
-      return null;
-    } catch (err: any) {
-      logger.error("Error appending feedback to Google Sheets:", err);
-      throw err; // Re-throw to indicate function failure and allow retries (if configured)
+      logger.info('Feedback appended to Google Sheets successfully!', response.data);
+    } catch (error: any) {
+      logger.error('Error appending feedback to Google Sheets:', error);
+      if (error.response && error.response.data) {
+        logger.error('Error response data:', error.response.data);
+      }
+      if (error.cause && error.cause.comment) {
+        logger.error('Error cause comment:', error.cause.comment);
+      }
+      throw new Error(`Failed to append feedback to Google Sheets: ${error.comment || 'Unknown error'}`);
     }
   }
 );

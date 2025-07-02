@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: 'Earthcare AI',
+  title: 'Earthworker AI',
   description: 'AI that regenerates desertified land via wildlife habitat creation, carbon offsetting, and water liter savings.',
 };
 

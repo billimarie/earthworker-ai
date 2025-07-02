@@ -1,4 +1,4 @@
-# **App Name**: Earthcare AI
+# **App Name**: Earthworker AI
 
 ## Core Features:
 

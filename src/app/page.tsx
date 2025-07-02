@@ -3,7 +3,11 @@
 import { useState, useRef, useEffect, type FormEvent } from "react";
 import { LoaderCircle, Send } from "lucide-react";
 
-import { handleQuery, type ChatMessage as Message } from "./actions";
+import {
+  handleQuery,
+  fetchImpactData,
+  type ChatMessage as Message,
+} from "./actions";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,15 +18,25 @@ import AdsenseBanner from "@/components/adsense-banner";
 import ChatMessage from "@/components/chat-message";
 import QuerySuggestions from "@/components/query-suggestions";
 import { useToast } from "@/hooks/use-toast";
+import type { ImpactData } from "@/services/impact-service";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [impactData, setImpactData] = useState<ImpactData | null>(null);
   const { toast } = useToast();
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadImpactData = async () => {
+      const data = await fetchImpactData();
+      setImpactData(data);
+    };
+    loadImpactData();
+  }, []);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -58,6 +72,9 @@ export default function Home() {
           ...prev,
           { role: "assistant", content: result.data as string },
         ]);
+        // Refetch impact data after a successful query
+        const data = await fetchImpactData();
+        setImpactData(data);
       } else if (result.type === "error") {
         setMessages((prev) => [
           ...prev,
@@ -97,8 +114,6 @@ export default function Home() {
     await processQuery(suggestion);
     setInput("");
   };
-
-  const queryCount = messages.filter((msg) => msg.role === "user").length;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -161,7 +176,7 @@ export default function Home() {
           </Card>
         </div>
         <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
-          <CarbonTracker queryCount={queryCount} />
+          <CarbonTracker impactData={impactData} />
           <AdsenseBanner />
         </aside>
       </main>

@@ -6,44 +6,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { ImpactData } from "@/services/impact-service";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CarbonTrackerProps {
-  queryCount: number;
+  impactData: ImpactData | null;
 }
 
-export default function CarbonTracker({ queryCount }: CarbonTrackerProps) {
-  // Variables from the Regenerative AI Query Impact Model
-  const R = 0.0015; // Revenue per query
-  const Csqft = 0.1; // Cost to regenerate 1 sq ft
-  const COsqft = 500; // Carbon offset per sq ft regenerated per year (g CO₂)
-  const WSsqft = 100; // Water saved per sq ft regenerated per year (liters)
-  const CEGemini = 1.6; // Carbon emissions per Gemini query (g CO₂)
-  const WCGemini = 0.025; // Water consumption per Gemini query (liters)
-  const Q = queryCount;
-
-  // Core Calculations
-  const totalRevenue = Q * R;
-  const sqFtRegenerated = totalRevenue / Csqft;
-  const totalCOOffset = sqFtRegenerated * COsqft;
-  const totalWSSaved = sqFtRegenerated * WSsqft;
-  const totalCEQueries = Q * CEGemini;
-  const totalWCQueries = Q * WCGemini;
-
-  // Net Impact
-  const netCarbon = totalCOOffset - totalCEQueries;
-  const netWater = totalWSSaved - totalWCQueries;
-
+export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
   const formatNumber = (num: number) => {
     return num.toLocaleString(undefined, {
       maximumFractionDigits: 1,
     });
   };
 
+  if (!impactData) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle>Our Global Impact</CardTitle>
+            <Leaf className="h-6 w-6 text-primary" />
+          </div>
+          <CardDescription>
+            Each query helps regenerate the planet.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-6 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const { sqFtRegenerated, netCarbon, netWater } = impactData;
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Your Impact</CardTitle>
+          <CardTitle>Our Global Impact</CardTitle>
           <Leaf className="h-6 w-6 text-primary" />
         </div>
         <CardDescription>
@@ -56,7 +60,7 @@ export default function CarbonTracker({ queryCount }: CarbonTrackerProps) {
             🌱
           </span>
           <p>
-            You helped regenerate{" "}
+            Together we've regenerated{" "}
             <span className="font-bold text-primary">
               {formatNumber(sqFtRegenerated)} sq ft
             </span>{" "}

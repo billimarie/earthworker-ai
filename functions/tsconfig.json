@@ -1,0 +1,27 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "es2022", // Or "commonjs" if your Firebase config uses that
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "outDir": "lib", // Output directory for compiled JavaScript
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2022", // Or "es2020" to match Node.js 18 runtime, or "es2023" for Node.js 20
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": true, // If you have both JS and TS files in your source
+    "declaration": true, // If you want declaration files
+    "moduleResolution": "node"
+  },
+  "compileOnSave": true,
+  "include": [
+    "src" // IMPORTANT: This tells TypeScript what files to compile and what files ESLint should type-check.
+          // If your functions are directly in the functions folder (e.g., functions/index.ts),
+          // you might need "include": ["*.ts"] or "include": ["./*.ts"] or adjust your project structure.
+          // A common setup is to put all your TypeScript source in a 'src' subfolder: functions/src/index.ts
+  ],
+  "exclude": [
+    "node_modules" // Exclude node_modules from compilation/type-checking
+  ]
+}

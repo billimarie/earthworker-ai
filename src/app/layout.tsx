@@ -1,6 +1,6 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import Script from 'next/script';
 
 export const metadata: Metadata = {
@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="google-site-verification" content="ca-pub-9937772838198466" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />

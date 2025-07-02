@@ -4,41 +4,38 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MessageSquare, Send, LoaderCircle } from 'lucide-react';
+import { Mail, Send, LoaderCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { handleFeedback } from '@/app/actions';
+import { handleWaitlistSubmission } from '@/app/actions';
 
-const feedbackSchema = z.object({
+const waitlistSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  comment: z.string().min(10, { message: 'Comment must be at least 10 characters.' }).max(500, { message: 'Comment must be less than 500 characters.' }),
 });
 
-type FeedbackFormValues = z.infer<typeof feedbackSchema>;
+type WaitlistFormValues = z.infer<typeof waitlistSchema>;
 
-export default function FeedbackCard() {
+export default function WaitlistCard() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const form = useForm<FeedbackFormValues>({
-    resolver: zodResolver(feedbackSchema),
+  const form = useForm<WaitlistFormValues>({
+    resolver: zodResolver(waitlistSchema),
     defaultValues: {
       email: '',
-      comment: '',
     },
   });
 
-  const onSubmit: SubmitHandler<FeedbackFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<WaitlistFormValues> = async (data) => {
     setIsLoading(true);
     try {
-      const result = await handleFeedback(data);
+      const result = await handleWaitlistSubmission(data);
       if (result.success) {
         toast({
-          title: 'Feedback Submitted',
-          description: 'Thank you for your feedback!',
+          title: 'You\'re on the list!',
+          description: 'Thank you for signing up. We\'ll be in touch soon.',
         });
         form.reset();
       } else {
@@ -52,7 +49,7 @@ export default function FeedbackCard() {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Could not submit feedback. Please try again later.',
+        description: 'Could not submit your email. Please try again later.',
       });
     } finally {
       setIsLoading(false);
@@ -63,11 +60,11 @@ export default function FeedbackCard() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Share Your Feedback</CardTitle>
-          <MessageSquare className="h-6 w-6 text-muted-foreground" />
+          <CardTitle>Join the Waitlist</CardTitle>
+          <Mail className="h-6 w-6 text-muted-foreground" />
         </div>
         <CardDescription>
-          Have a suggestion or found a bug? Let us know.
+          Be the first to know when new features are available.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -86,26 +83,13 @@ export default function FeedbackCard() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="comment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Comment</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Your feedback..." className="resize-none" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Submit Feedback
+                  Join Waitlist
                 </>
               )}
             </Button>

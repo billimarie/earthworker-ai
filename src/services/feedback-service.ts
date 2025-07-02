@@ -5,7 +5,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export interface FeedbackData {
   email: string;
-  comment: string;
+  comment?: string;
 }
 
 export async function saveFeedback(data: FeedbackData): Promise<string> {

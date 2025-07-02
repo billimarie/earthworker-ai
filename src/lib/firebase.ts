@@ -11,6 +11,12 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+if (!firebaseConfig.projectId) {
+  throw new Error(
+    "Firebase project ID is not set. Please add NEXT_PUBLIC_FIRE_PROJECT_ID to your .env file."
+  );
+}
+
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
 

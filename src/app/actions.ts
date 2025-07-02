@@ -3,7 +3,7 @@
 import { generateResponse } from "@/ai/flows/generate-response";
 import { optimizeQuery } from "@/ai/flows/optimize-query";
 import { getImpactData, updateImpactData } from "@/services/impact-service";
-import { saveFeedback, type FeedbackData } from "@/services/feedback-service";
+import { saveFeedback } from "@/services/feedback-service";
 import { z } from 'zod';
 
 export interface ChatMessage {
@@ -74,18 +74,17 @@ export async function fetchImpactData() {
   return await getImpactData();
 }
 
-const feedbackSchema = z.object({
-  email: z.string().email(),
-  comment: z.string().min(10).max(500),
+const waitlistSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }),
 });
 
-export async function handleFeedback(data: FeedbackData): Promise<{success: boolean, error?: string}> {
+export async function handleWaitlistSubmission(data: {email: string}): Promise<{success: boolean, error?: string}> {
   try {
-    const validatedData = feedbackSchema.parse(data);
-    await saveFeedback(validatedData);
+    const validatedData = waitlistSchema.parse(data);
+    await saveFeedback({ email: validatedData.email, comment: 'Waitlist signup' });
     return { success: true };
   } catch (error) {
-    console.error("Feedback submission error:", error);
+    console.error("Waitlist submission error:", error);
     if (error instanceof z.ZodError) {
       return { success: false, error: "Invalid data provided." };
     }

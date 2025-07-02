@@ -19,7 +19,7 @@ import ChatMessage from "@/components/chat-message";
 import QuerySuggestions from "@/components/query-suggestions";
 import { useToast } from "@/hooks/use-toast";
 import type { ImpactData } from "@/services/impact-service";
-import FeedbackCard from "@/components/feedback-card";
+import WaitlistCard from "@/components/feedback-card";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -120,84 +120,75 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 flex flex-col gap-8 p-4 md:p-8">
-        <section className="max-w-4xl space-y-6 py-12 h-screen flex flex-col justify-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-green-900">The first AI to <span className="italic">give back</span> to Earth.</h2>
-          <div className="pt-6 flex flex-row justify-center space-x-6">
-            [Learn More] [How It Works]
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <Card className="flex-1 flex flex-col">
-              <CardContent className="flex-1 flex flex-col p-4 md:p-6">
-                <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
-                  <div className="space-y-6">
-                    {messages.length === 0 && (
-                      <ChatMessage
-                        role="assistant"
-                        content="Hello! How can I help you today? Ask me anything."
-                      />
-                    )}
-                    {messages.map((msg, index) => (
-                      <ChatMessage key={index} {...msg} />
-                    ))}
-                    {suggestions.length > 0 && (
-                      <QuerySuggestions
-                        suggestions={suggestions}
-                        onSuggestionClick={handleSuggestionClick}
-                      />
-                    )}
-                  </div>
-                </ScrollArea>
-                <form
-                  onSubmit={handleSubmit}
-                  className="mt-6 flex items-start gap-4 border-t pt-6"
-                >
-                  <Textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask a question about sustainability or anything else..."
-                    className="flex-1 resize-none"
-                    rows={2}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSubmit(e);
-                      }
-                    }}
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={isLoading || !input.trim()}
-                    aria-label="Send message"
-                  >
-                    {isLoading ? (
-                      <LoaderCircle className="animate-spin" />
-                    ) : (
-                      <Send />
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            [Waitlist]
-          </div>
-
-        </section>
-
-
-        <section className="flex flex-col gap-6">
-          <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
-            <CarbonTracker impactData={impactData} />
-            <AdsenseBanner />
-            <FeedbackCard />
-          </aside>
-        </section>
         
+        <div className="w-full flex flex-col gap-6 p-4 md:p-8">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-green-900">The first AI to <span className="italic">give back</span> to Earth.</h2>
+            <div className="pt-6 flex flex-row justify-center space-x-6">
+              [Learn More] [How It Works]
+            </div>
+        </div>
+
+        <div className="flex-1 flex flex-col gap-6">
+          <Card className="flex-1 flex flex-col">
+            <CardContent className="flex-1 flex flex-col p-4 md:p-6">
+              <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
+                <div className="space-y-6">
+                  {messages.length === 0 && (
+                    <ChatMessage
+                      role="assistant"
+                      content="Hello! How can I help you today? Ask me anything."
+                    />
+                  )}
+                  {messages.map((msg, index) => (
+                    <ChatMessage key={index} {...msg} />
+                  ))}
+                  {suggestions.length > 0 && (
+                    <QuerySuggestions
+                      suggestions={suggestions}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+              <form
+                onSubmit={handleSubmit}
+                className="mt-6 flex items-start gap-4 border-t pt-6"
+              >
+                <Textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask a question about sustainability or anything else..."
+                  className="flex-1 resize-none"
+                  rows={2}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                  disabled={isLoading}
+                />
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={isLoading || !input.trim()}
+                  aria-label="Send message"
+                >
+                  {isLoading ? (
+                    <LoaderCircle className="animate-spin" />
+                  ) : (
+                    <Send />
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+        <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
+          <CarbonTracker impactData={impactData} />
+          <AdsenseBanner />
+          <WaitlistCard />
+        </aside>
       </main>
     </div>
   );

@@ -23,15 +23,25 @@ const Adsense: React.FC<AdsenseProps> = ({
   adFormat = "auto",
   adLayoutKey,
 }) => {
-  useEffect(() => {
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.error("AdSense error:", err);
-    }
-  }, []);
+  const adClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
 
-  const adClientId = "ca-pub-9937772838198466";
+  useEffect(() => {
+    if (adClientId) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (err) {
+        console.error("AdSense error:", err);
+      }
+    }
+  }, [adClientId]);
+
+  if (!adClientId) {
+    return (
+      <div className="flex items-center justify-center h-full bg-muted text-muted-foreground text-sm p-4 text-center">
+        Your ad could be here! Just set your AdSense Client ID in the environment variables.
+      </div>
+    );
+  }
 
   return (
     <div className={className}>

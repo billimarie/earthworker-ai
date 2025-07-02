@@ -19,6 +19,7 @@ import ChatMessage from "@/components/chat-message";
 import QuerySuggestions from "@/components/query-suggestions";
 import { useToast } from "@/hooks/use-toast";
 import type { ImpactData } from "@/services/impact-service";
+import FeedbackCard from "@/components/feedback-card";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -178,6 +179,7 @@ export default function Home() {
         <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
           <CarbonTracker impactData={impactData} />
           <AdsenseBanner />
+          <FeedbackCard />
         </aside>
       </main>
     </div>

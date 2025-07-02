@@ -1,0 +1,14 @@
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+*.local
+
+# Google Cloud
+atomic-amulet-464620-v2-f4c76c5b92d3.json
+earthworker-ai-b5b9e7683a14.json

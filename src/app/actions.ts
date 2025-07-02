@@ -3,6 +3,8 @@
 import { generateResponse } from "@/ai/flows/generate-response";
 import { optimizeQuery } from "@/ai/flows/optimize-query";
 import { getImpactData, updateImpactData } from "@/services/impact-service";
+import { saveFeedback, type FeedbackData } from "@/services/feedback-service";
+import { z } from 'zod';
 
 export interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -70,4 +72,23 @@ export async function handleQuery(query: string): Promise<ActionResponse> {
 
 export async function fetchImpactData() {
   return await getImpactData();
+}
+
+const feedbackSchema = z.object({
+  email: z.string().email(),
+  comment: z.string().min(10).max(500),
+});
+
+export async function handleFeedback(data: FeedbackData): Promise<{success: boolean, error?: string}> {
+  try {
+    const validatedData = feedbackSchema.parse(data);
+    await saveFeedback(validatedData);
+    return { success: true };
+  } catch (error) {
+    console.error("Feedback submission error:", error);
+    if (error instanceof z.ZodError) {
+      return { success: false, error: "Invalid data provided." };
+    }
+    return { success: false, error: "An unexpected error occurred." };
+  }
 }

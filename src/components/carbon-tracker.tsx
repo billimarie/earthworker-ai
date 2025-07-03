@@ -47,7 +47,7 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Helping The Planet</CardTitle>
+          <CardTitle>Our Impact Metrics</CardTitle>
           <Leaf className="h-6 w-6 text-primary" />
         </div>
         <CardDescription>

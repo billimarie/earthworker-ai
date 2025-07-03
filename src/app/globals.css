@@ -31,7 +31,7 @@
     --radius: 0.5rem;
   }
   .dark {
-    --background: 138 28% 8%;
+    --background: 225 28% 8%;
     --foreground: 140 15% 95%;
     --card: 138 28% 10%;
     --card-foreground: 140 15% 95%;
@@ -65,4 +65,59 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Typography */
+.logo-text {
+  background: linear-gradient(to right, #0891b2, #0d9488);
+  background-clip: border-box;
+  background: -webkit-linear-gradient(to right, #0891b2, #0d9488);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+
+/* CodePen: https://codepen.io/GeeHsu/pen/jOMJMLe */
+
+div.glass {
+  cursor: pointer !important;
+  transform: translate(0, 0); 
+}
+
+div.glass div.inner-glass {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-right: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 3px 35px rgba(0,0,0,0.1);
+  backdrop-filter: blur(1px);
+  transition: 0.5s;
+  overflow: hidden;
+}
+div.glass div.inner-glass:hover {
+  /* transform: translateY(-20px); */
+  border: 0;
+}
+div.glass div.inner-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55px;
+  height: 100%;
+  border: 0;
+  background: rgba(255,255,255,0.75);
+  transform: skewX(45deg) translateX(390px);
+  transition: 0.25s;
+}
+div.glass div.inner-glass:hover::before {
+  transform: skewX(45deg) translateX(-150px);
+}
+div.glass:active {
+  transform: translate(3px, -3px); 
 }

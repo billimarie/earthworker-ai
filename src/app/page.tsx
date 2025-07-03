@@ -19,7 +19,8 @@ import ChatMessage from "@/components/chat-message";
 import QuerySuggestions from "@/components/query-suggestions";
 import { useToast } from "@/hooks/use-toast";
 import type { ImpactData } from "@/services/impact-service";
-import WaitlistCard from "@/components/feedback-card";
+import WaitlistCard from "@/components/waitlist-card";
+import ChrysalisCoinsDisplay from "@/components/chrysalis-coins-display";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -119,12 +120,25 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 flex flex-col gap-8 p-4 md:p-8">
+      <main className="flex-1 flex flex-col gap-8 px-4 px-8">
         
-        <div className="w-full flex flex-col gap-6 p-4 md:p-8">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-green-900">The first AI to <span className="italic">give back</span> to Earth.</h2>
+        <div className="w-full flex flex-col gap-6 px-4 md:px-8 h-screen justify-center mx-auto text-center">
+
+          <div className="active:translate-y-1 active:scale-95 transform transition-transform duration-150 ease-out"><ChrysalisCoinsDisplay /></div>
+
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary">"Machine Learning? Meet <span className="underline">Mother Nature</span>."</h2>
+          
             <div className="pt-6 flex flex-row justify-center space-x-6">
-              [Learn More] [How It Works]
+              <Button
+                    type="submit"
+                    size="lg"
+                    aria-label="Send message"
+              >Pre-Order</Button>
+              <Button
+                variant="ghost"
+                size="lg"
+                aria-label="Send message"
+              >Read the Black Paper</Button>
             </div>
         </div>
 
@@ -189,6 +203,9 @@ export default function Home() {
           <AdsenseBanner />
           <WaitlistCard />
         </aside>
+
+        <p className="text-gray-500 italic text-lg md:text-xl">Introducing the world's first artificially intelligent micro forest:<br />backed by solar power, guided by neural networks, and built off of living data.</p>
+        
       </main>
     </div>
   );

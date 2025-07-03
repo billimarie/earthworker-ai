@@ -1,4 +1,4 @@
-# **App Name**: Earthworker AI
+# **App Name**: The AI Forest
 
 ## Core Features:
 

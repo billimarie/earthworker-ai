@@ -2,7 +2,7 @@
 
 import { generateResponse } from "@/ai/flows/generate-response";
 import { optimizeQuery } from "@/ai/flows/optimize-query";
-import { getImpactData, updateImpactData } from "@/services/impact-service";
+import { getImpactData, updateImpactData, type ImpactData } from "@/services/impact-service";
 import { saveFeedback } from "@/services/feedback-service";
 import { z } from 'zod';
 
@@ -16,25 +16,27 @@ export interface ActionResponse {
   data: string | string[];
 }
 
-function calculateImpactForOneQuery() {
-  const R = 0.0015;
-  const Csqft = 0.1;
-  const COsqft = 500;
-  const WSsqft = 100;
-  const CEGemini = 1.6;
-  const WCGemini = 0.025;
+function calculateImpactForOneQuery(): Partial<ImpactData> {
+  const R = 0.0015; // Revenue per query
+  const Csqft = 0.1; // Cost per sq ft regenerated
+  const COsqft = 500; // CO2 offset per sq ft
+  const WSsqft = 100; // Water saved per sq ft
+  const CEGemini = 1.6; // Carbon emitted per Gemini query
+  const WCGemini = 0.025; // Water consumed per Gemini query
+  const Bsqft = 0.01; // Biodiversity species supported per sq ft
   const Q = 1;
 
-  const totalRevenue = Q * R;
-  const sqFtRegenerated = totalRevenue / Csqft;
+  const adRevenue = Q * R;
+  const sqFtRegenerated = adRevenue / Csqft;
   const totalCOOffset = sqFtRegenerated * COsqft;
   const totalWSSaved = sqFtRegenerated * WSsqft;
+  const biodiversitySpeciesSupported = sqFtRegenerated * Bsqft;
   const totalCEQueries = Q * CEGemini;
   const totalWCQueries = Q * WCGemini;
   const netCarbon = totalCOOffset - totalCEQueries;
   const netWater = totalWSSaved - totalWCQueries;
 
-  return { sqFtRegenerated, netCarbon, netWater };
+  return { sqFtRegenerated, netCarbon, netWater, adRevenue, biodiversitySpeciesSupported };
 }
 
 export async function handleQuery(query: string): Promise<ActionResponse> {

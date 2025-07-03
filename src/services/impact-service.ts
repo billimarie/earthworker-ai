@@ -5,19 +5,13 @@ import { doc, runTransaction, increment } from 'firebase/firestore';
 
 const impactDocRef = doc(db, 'impact', 'global');
 
-// TODO: Not only include Global impact, but individual User impact, as well
-// impact/global => totals
-// /impact/users/{userId} => per-user stats
-/* Each time updateImpactData() runs:
-- Increment global totals
-- Increment user-specific totals
-This lets us show personal dashboards: “You personally regenerated 45 sq ft, saved 4,000 g CO₂, and retained 60 L water.” */
-
 export interface ImpactData {
   sqFtRegenerated: number;
   netCarbon: number;
   netWater: number;
   biodiversitySpeciesSupported: number;
+  adRevenue: number;
+  operationalCosts: number;
 }
 
 export async function getImpactData(): Promise<ImpactData> {
@@ -27,28 +21,49 @@ export async function getImpactData(): Promise<ImpactData> {
       return docSnap.data() as ImpactData;
     }
     
-    const initialData: ImpactData = { sqFtRegenerated: 0, netCarbon: 0, netWater: 0, biodiversitySpeciesSupported: 0 };
+    // Initial costs to show a starting negative profit
+    const initialData: ImpactData = { 
+      sqFtRegenerated: 0, 
+      netCarbon: 0, 
+      netWater: 0, 
+      biodiversitySpeciesSupported: 0,
+      adRevenue: 0,
+      operationalCosts: 500 
+    };
     transaction.set(impactDocRef, initialData);
     return initialData;
   });
   return data;
 }
 
-export async function updateImpactData(data: { sqFtRegenerated: number; netCarbon: number; netWater: number; biodiversitySpeciesSupported: number; }): Promise<void> {
+export async function updateImpactData(data: Partial<ImpactData>): Promise<void> {
     await runTransaction(db, async (transaction) => {
         const docSnap = await transaction.get(impactDocRef);
-        // This transaction ensures that even if the document doesn't exist for some reason,
-        // it gets created before attempting to increment values.
+
+        const updates: {[key: string]: any} = {};
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                updates[key] = increment((data as any)[key]);
+            }
+        }
+
         if (!docSnap.exists()) {
-            transaction.set(impactDocRef, data);
+            const initialData: ImpactData = { 
+                sqFtRegenerated: 0, 
+                netCarbon: 0, 
+                netWater: 0, 
+                biodiversitySpeciesSupported: 0,
+                adRevenue: 0,
+                operationalCosts: 500 
+            };
+            const mergedData = { ...initialData, ...data };
+            
+            // Set the initial document with merged values
+            transaction.set(impactDocRef, mergedData);
             return;
         }
 
-        transaction.update(impactDocRef, {
-            sqFtRegenerated: increment(data.sqFtRegenerated),
-            netCarbon: increment(data.netCarbon),
-            netWater: increment(data.netWater),
-            biodiversitySpeciesSupported: increment(data.biodiversitySpeciesSupported)
-        });
+        // If the document exists, update it with the increments
+        transaction.update(impactDocRef, updates);
     });
 }

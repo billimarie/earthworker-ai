@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Script from 'next/script';
-import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'The AI Forest',
@@ -34,16 +33,9 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className="font-body antialiased bg-gradient-to-tl from-violet-950 via-indigo-950 to-blue-950">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className="font-body antialiased bg-white">
           {children}
           <Toaster />
-        </ThemeProvider>
       </body>
     </html>
   );

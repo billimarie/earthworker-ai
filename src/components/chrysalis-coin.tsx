@@ -53,30 +53,20 @@ const ChrysalisCoin: FC<ChrysalisCoinProps> = ({
   "transform transition-transform duration-150 ease-out",
   // Hover lifts up
   "hover:-translate-y-1 hover:shadow-[0_0_0_3px_rgba(255,214,102,0.6),0_0_10px_12px_rgba(255,214,102,0.25)]",
-  
   "active:transform active:transition-transform active:duration-150 active:ease-in-out active:opacity-80",
   className
       )}
-      style={{ backgroundImage: `url(${imageUrl})` }}
       {...props}
     >
       
-        <div className="transform transition-transform duration-150 ease-out absolute inset-[12px] rounded-full pointer-events-none z-10 shadow-[inset_0.5px_0.5px_1.5px_rgba(255,235,180,0.6),_inset_-1px_-1px_1px_rgba(160,110,0,0.5),_inset_3px_3px_6px_rgba(0,0,0,0.25)] border border-orange-300/20"></div>
+        <div className="transform transition-transform duration-150 ease-out absolute inset-[20px] rounded-full pointer-events-none z-10 shadow-[inset_0.5px_0.5px_1.5px_rgba(255,235,180,0.6),_inset_-1px_-1px_1px_rgba(160,110,0,0.5),_inset_3px_3px_6px_rgba(0,0,0,0.25)] border border-orange-300/20"></div>
     
-        <div className="inner-glass absolute top-0 bottom-0 right-0 left-0 inset-[12px] rounded-full overflow-hidden flex flex-col justify-center items-center z-[5] p-6 text-center w-full h-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-black/25 via-black/30 to-black/40 pointer-events-none z-10 rounded-full"></div>
+        <div className="z-90 inner-glass absolute top-0 bottom-0 right-0 left-0 inset-[20px] rounded-full overflow-hidden flex flex-col justify-center items-center p-6 text-center w-full h-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-700/90 via-yellow-500/80 to-amber-800 pointer-events-none z-10 rounded-full"></div>
 
-            <div className="relative z-20 text-slate-50 [text-shadow:0_2px_4px_rgba(0,0,0,0.5)] mt-10">
-                <h1 className="font-serif-display text-4xl lg:text-5xl font-bold mb-1 tracking-wide flex items-center justify-center gap-3 ">
-                    <MainIcon className="w-9 h-9 opacity-80" />
-                    {name}
-                </h1>
-                <p className="text-slate-300 text-sm font-light">{description}</p>
-            </div>
-
-            <button className="relative z-20 bg-gradient-to-br from-yellow-300 to-yellow-500 text-amber-900 font-semibold py-2 px-4 rounded-full w-auto min-w-[120px] max-w-[85%] mx-auto mt-6 transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 flex items-center justify-center gap-2 tracking-wide">
-            Collect
-            </button>
+            <div className="relative z-20 text-slate-50 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">
+              <MainIcon className="w-40 h-40 text-amber-300/90 stroke-1 blur-sm text-center mx-auto" />
+                </div>
         </div>
             
     </div>

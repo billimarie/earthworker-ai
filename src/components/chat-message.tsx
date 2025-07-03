@@ -31,20 +31,20 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
   const messageFlexDirection = isUser ? "flex-row-reverse" : "flex-row";
 
   return (
-    <div className={cn("flex gap-3", messageFlexDirection, messageAlignment)}>
-      <Avatar>
-        <AvatarFallback className={cn(avatarBg, avatarText)}>
-          <Icon className="h-5 w-5" />
-        </AvatarFallback>
-      </Avatar>
-      <div
-        className={cn(
-          "max-w-[75%] rounded-lg p-3 whitespace-pre-wrap",
-          messageBg
-        )}
-      >
-        <p className="text-sm leading-relaxed">{content}</p>
+      <div className={cn("flex gap-3", messageFlexDirection, messageAlignment)}>
+        <Avatar>
+          <AvatarFallback className={cn(avatarBg, avatarText)}>
+            <Icon className="h-5 w-5" />
+          </AvatarFallback>
+        </Avatar>
+        <div
+          className={cn(
+            "max-w-[75%] rounded-lg p-3 whitespace-pre-wrap",
+            messageBg
+          )}
+        >
+          <p className="text-sm leading-relaxed">{content}</p>
+        </div>
       </div>
-    </div>
   );
 }

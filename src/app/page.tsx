@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import CarbonTracker from "@/components/carbon-tracker";
 import AdsenseBanner from "@/components/adsense-banner";
 import ChatMessage from "@/components/chat-message";
@@ -119,10 +120,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* <Header /> */}
       <main className="flex-1 flex flex-col gap-8 px-4 px-8">
         
-        <div className="w-full flex flex-col gap-6 px-4 md:px-8 h-screen justify-center mx-auto text-center">
+        <div className="h-screen w-full flex flex-col gap-6 px-4 md:px-8 justify-center mx-auto text-center">
 
           <div className="active:translate-y-1 active:scale-95 transform transition-transform duration-150 ease-out"><ChrysalisCoinsDisplay /></div>
 
@@ -130,76 +131,22 @@ export default function Home() {
           
             <div className="pt-6 flex flex-row justify-center space-x-6">
               <Button
-                    type="submit"
-                    size="lg"
-                    aria-label="Send message"
-              >Pre-Order</Button>
-              <Button
                 variant="ghost"
                 size="lg"
                 aria-label="Send message"
+                className="text-white/80 hover:bg-transparent hover:underline"
               >Read the Black Paper</Button>
+              <Button
+                type="submit"
+                size="lg"
+                aria-label="Send message"
+                className="glass-card rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-white hover:text-amber-900 font-bold transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 backdrop-blur-3xl shadow-2xl"
+              >Pre-Order</Button>
             </div>
         </div>
 
-        <div className="flex-1 flex flex-col gap-6">
-          <Card className="flex-1 flex flex-col">
-            <CardContent className="flex-1 flex flex-col p-4 md:p-6">
-              <ScrollArea className="flex-1 pr-4" ref={scrollAreaRef}>
-                <div className="space-y-6">
-                  {messages.length === 0 && (
-                    <ChatMessage
-                      role="assistant"
-                      content="Hello! How can I help you today? Ask me anything."
-                    />
-                  )}
-                  {messages.map((msg, index) => (
-                    <ChatMessage key={index} {...msg} />
-                  ))}
-                  {suggestions.length > 0 && (
-                    <QuerySuggestions
-                      suggestions={suggestions}
-                      onSuggestionClick={handleSuggestionClick}
-                    />
-                  )}
-                </div>
-              </ScrollArea>
-              <form
-                onSubmit={handleSubmit}
-                className="mt-6 flex items-start gap-4 border-t pt-6"
-              >
-                <Textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask a question about sustainability or anything else..."
-                  className="flex-1 resize-none"
-                  rows={2}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                  disabled={isLoading}
-                />
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={isLoading || !input.trim()}
-                  aria-label="Send message"
-                >
-                  {isLoading ? (
-                    <LoaderCircle className="animate-spin" />
-                  ) : (
-                    <Send />
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
         <aside className="w-full md:w-80 lg:w-96 flex flex-col gap-8">
-          <CarbonTracker impactData={impactData} />
+          <CarbonTracker impactData={impactData} className="flex-1 flex flex-col gap-6 justify-center items-center p-4 glass-card bg-gradient-to-br from-purple-600/20 via-indigo-600/20 to-blue-600/20 backdrop-blur-3xl shadow-2xl rounded-3xl p-6 overflow-hidden border border-white/10" />
           <AdsenseBanner />
           <WaitlistCard />
         </aside>
@@ -207,6 +154,9 @@ export default function Home() {
         <p className="text-gray-500 italic text-lg md:text-xl">Introducing the world's first artificially intelligent micro forest:<br />backed by solar power, guided by neural networks, and built off of living data.</p>
         
       </main>
+
+      <Footer />
+
     </div>
   );
 }

@@ -30,32 +30,6 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
-  .dark {
-    --background: 225 28% 8%;
-    --foreground: 140 15% 95%;
-    --card: 138 28% 10%;
-    --card-foreground: 140 15% 95%;
-    --popover: 138 28% 8%;
-    --popover-foreground: 140 15% 95%;
-    --primary: 138 28% 70%;
-    --primary-foreground: 138 28% 10%;
-    --secondary: 32 26% 15%;
-    --secondary-foreground: 32 26% 80%;
-    --muted: 138 28% 15%;
-    --muted-foreground: 140 15% 60%;
-    --accent: 138 28% 15%;
-    --accent-foreground: 140 15% 95%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 138 28% 20%;
-    --input: 138 28% 20%;
-    --ring: 138 28% 70%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
 }
 
 @layer base {
@@ -68,6 +42,7 @@
 }
 
 /* Typography */
+
 .logo-text {
   background: linear-gradient(to right, #0891b2, #0d9488);
   background-clip: border-box;
@@ -111,7 +86,7 @@ div.glass div.inner-glass::before {
   width: 55px;
   height: 100%;
   border: 0;
-  background: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,1);
   transform: skewX(45deg) translateX(390px);
   transition: 0.25s;
 }
@@ -120,4 +95,50 @@ div.glass div.inner-glass:hover::before {
 }
 div.glass:active {
   transform: translate(3px, -3px); 
+}
+
+/* Glassmorphism: https://hype4.academy/tools/glassmorphism-generator */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0px 0px rgba(255, 255, 255, 0);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
 }

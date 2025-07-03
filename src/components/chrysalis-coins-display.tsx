@@ -1,4 +1,4 @@
-import { Sprout, Worm } from 'lucide-react';
+import { Shell, Sprout, Worm } from 'lucide-react';
 import ChrysalisCoin from './chrysalis-coin';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
@@ -35,10 +35,10 @@ export default function ChrysalisCoinsDisplay() {
       <CardContent className="flex flex-col items-center gap-4">
         <ChrysalisCoin
           name="Mycelia"
-          description="The Unseen Network"
+          description="The Unseen"
           imageUrl="https://res.cloudinary.com/djrhjkkvm/image/upload/v1751496176/AI/ai-mechanical-earthworm_the-ai-forest_vfcsdm.webp"
           data-ai-hint="fungus network"
-          mainIcon={MyceliumIcon}
+          mainIcon={Shell}
         />
         {/* <ChrysalisCoin
           name="Mycelia"

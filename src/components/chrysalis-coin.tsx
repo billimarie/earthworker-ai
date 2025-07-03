@@ -65,8 +65,8 @@ const ChrysalisCoin: FC<ChrysalisCoinProps> = ({
             <div className="absolute inset-0 bg-gradient-to-br from-amber-700/90 via-yellow-500/80 to-amber-800 pointer-events-none z-10 rounded-full"></div>
 
             <div className="relative z-20 text-slate-50 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">
-              <MainIcon className="w-40 h-40 text-amber-300/90 stroke-1 blur-sm text-center mx-auto" />
-                </div>
+              <MainIcon className="w-40 h-40 text-amber-700/90 stroke-1 text-center mx-auto" />
+            </div>
         </div>
             
     </div>

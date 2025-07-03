@@ -8,13 +8,13 @@ export default function Footer() {
                 <a className="flex-1 text-center" href="/?tab=dashboard">
                     <div className="flex flex-col items-center justify-center gap-1 w-full h-full p-2 rounded-lg transition-colors text-muted-foreground hover:text-primary">
                         <LayoutDashboard className="h-6 w-6" />
-                        <span className="text-xs">Read</span>
+                        <span className="text-xs">Universe</span>
                     </div>
                 </a>
                 <a className="flex-1 text-center" href="/?tab=community">
                     <div className="flex flex-col items-center justify-center gap-1 w-full h-full p-2 rounded-lg transition-colors text-muted-foreground hover:text-primary">
                         <BarChart3 className="h-6 w-6" />
-                        <span className="text-xs">Listen</span>
+                        <span className="text-xs">Data</span>
                     </div>
                 </a>
                 <button className="flex-1 text-center bg-transparent border-none p-0 h-full">

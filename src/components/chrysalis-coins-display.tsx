@@ -1,53 +1,79 @@
-import { Shell, Sprout, Worm } from 'lucide-react';
+'use client';
+
+import { useState, useEffect, type ElementType, type SVGProps } from 'react';
+import * as icons from 'lucide-react';
+import { chrysalisVariants } from '@/lib/chrysalisVariants';
 import ChrysalisCoin from './chrysalis-coin';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent } from './ui/card';
+import { Skeleton } from './ui/skeleton';
 
-const MyceliumIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M2 12s3-4 7-4 6 4 8 4" />
-    <path d="M20 12s-2 4-6 4-7-4-9-4" />
-    <path d="M12 2v3" />
-    <path d="M10 7v2" />
-    <path d="M14 7v2" />
-    <path d="M5 15v2" />
-    <path d="M19 15v2" />
-  </svg>
-);
+// A type guard to check if a key is a valid Lucide icon name
+function isLucideIcon(key: string): key is keyof typeof icons {
+  return key in icons;
+}
 
-const LevelIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-        <path d="M12 2L6.5 12h11L12 2zm5.5 11l-5.5 9-5.5-9h11z"/>
-    </svg>
-);
+// Default coin to show if today's isn't found or during loading
+const defaultVariant = {
+  date: "2024-01-05", // Defaulting to Mycelial Web to match the image
+  name: "Mycelial Web",
+  description: "The unseen network connecting all life.",
+  icon: "Network",
+};
+const DefaultIcon = icons.Network;
 
 export default function ChrysalisCoinsDisplay() {
+  const [todaysVariant, setTodaysVariant] = useState(defaultVariant);
+  const [IconComponent, setIconComponent] = useState<ElementType<SVGProps<SVGSVGElement>>>(() => DefaultIcon);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // This runs only on the client, after hydration
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const todaysDateString = `${year}-${month}-${day}`;
+
+    const variant = chrysalisVariants.find(v => v.date === todaysDateString) || defaultVariant;
+    
+    setTodaysVariant(variant);
+
+    if (variant.icon && isLucideIcon(variant.icon)) {
+        const lucideIcon = icons[variant.icon];
+        if (lucideIcon) {
+            setIconComponent(() => lucideIcon);
+        } else {
+            setIconComponent(() => DefaultIcon);
+        }
+    } else {
+        setIconComponent(() => DefaultIcon);
+    }
+
+    setIsLoading(false);
+  }, []);
+
+  const imageUrl = "https://res.cloudinary.com/djrhjkkvm/image/upload/v1751496176/AI/ai-mechanical-earthworm_the-ai-forest_vfcsdm.webp";
+
+  if (isLoading) {
+    return (
+        <Card className="bg-transparent border-none shadow-none rounded-none">
+            <CardContent className="flex flex-col items-center gap-4">
+                 <Skeleton className="w-[320px] h-[320px] rounded-full" />
+            </CardContent>
+        </Card>
+    )
+  }
+
   return (
     <Card className="bg-transparent border-none shadow-none rounded-none">
       <CardContent className="flex flex-col items-center gap-4">
         <ChrysalisCoin
-          name="Mycelia"
-          description="The Unseen"
-          imageUrl="https://res.cloudinary.com/djrhjkkvm/image/upload/v1751496176/AI/ai-mechanical-earthworm_the-ai-forest_vfcsdm.webp"
-          data-ai-hint="fungus network"
-          mainIcon={Shell}
+          name={todaysVariant.name}
+          description={todaysVariant.description}
+          imageUrl={imageUrl}
+          data-ai-hint="nature abstract"
+          mainIcon={IconComponent}
         />
-        {/* <ChrysalisCoin
-          name="Mycelia"
-          description="The Unseen Network"
-          imageUrl="https://res.cloudinary.com/djrhjkkvm/image/upload/v1751496176/AI/ai-mechanical-earthworm_the-ai-forest_vfcsdm.webp"
-          data-ai-hint="fungus network"
-          mainIcon={MyceliumIcon}
-        /> */}
-        {/* Add more coins here as they are unlocked */}
       </CardContent>
     </Card>
   );

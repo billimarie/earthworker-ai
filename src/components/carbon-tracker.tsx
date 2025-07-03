@@ -14,8 +14,8 @@ interface CarbonTrackerProps {
 }
 
 export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
-  const formatNumber = (num: number) => {
-    return num.toLocaleString(undefined, {
+  const formatNumber = (num?: number) => {
+    return (num || 0).toLocaleString(undefined, {
       maximumFractionDigits: 1,
     });
   };
@@ -29,7 +29,7 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
             <Leaf className="h-6 w-6 text-primary" />
           </div>
           <CardDescription>
-            Each query helps regenerate the planet.
+            Here's how the AI Forest has positively impacted the planet:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -41,17 +41,17 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
     );
   }
 
-  const { sqFtRegenerated, netCarbon, netWater } = impactData;
+  const { sqFtRegenerated, netCarbon, netWater, biodiversitySpeciesSupported } = impactData;
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Our Global Impact</CardTitle>
+          <CardTitle>Helping The Planet</CardTitle>
           <Leaf className="h-6 w-6 text-primary" />
         </div>
         <CardDescription>
-          Each query helps regenerate the planet.
+        Here's our regenerative AI Forest data:
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -60,11 +60,10 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
             🌱
           </span>
           <p>
-            Together we've regenerated{" "}
+            Healthy Soil restored:{" "}
             <span className="font-bold text-primary">
               {formatNumber(sqFtRegenerated)} sq ft
-            </span>{" "}
-            of desertified land.
+            </span>.{" "}
           </p>
         </div>
         <div className="flex items-center gap-3 text-sm">
@@ -72,7 +71,7 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
             🌍
           </span>
           <p>
-            Net carbon saved:{" "}
+            Net Carbon saved:{" "}
             <span className="font-bold text-primary">
               {formatNumber(netCarbon)} grams CO₂
             </span>
@@ -84,11 +83,22 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
             💧
           </span>
           <p>
-            Net water retained:{" "}
+            Net Water retained:{" "}
             <span className="font-bold text-primary">
               {formatNumber(netWater)} liters
             </span>
             .
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-sm">
+          <span role="img" aria-label="butterfly" className="text-xl">
+            🦋
+          </span>
+          <p>
+            Biodiversity increased:{" "}
+            <span className="font-bold text-primary">
+              {formatNumber(biodiversitySpeciesSupported)} species
+            </span>.{" "}
           </p>
         </div>
       </CardContent>

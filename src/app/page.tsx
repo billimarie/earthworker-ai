@@ -120,14 +120,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <Header /> */}
+      
+      <Header />
+      
       <main className="flex-1 flex flex-col gap-8 px-4 px-8 mb-20">
         
         <div className="h-screen w-full flex flex-col gap-6 px-4 md:px-8 justify-center mx-auto text-center">
 
           <div className="active:translate-y-1 active:scale-95 transform transition-transform duration-150 ease-out"><ChrysalisCoinsDisplay /></div>
 
-          <h2 className="text-2xl md:text-3xl font-emibold tracking-tight text-primary text-gray-600">Introducing the world's first artificially intelligent micro forest: backed by solar power, guided by neural networks, and built off of living data.</h2>
+          <h2 className="text-2xl md:text-3xl font-emibold tracking-tight text-primary text-gray-600">Introducing the world's first artificially intelligent micro forest: backed by solar power, guided by neural networks, and built on living data.</h2>
 
           <div className="pt-6 flex flex-row justify-center space-x-6">
             <Button
@@ -139,9 +141,9 @@ export default function Home() {
             <Button
               type="submit"
               size="lg"
-              aria-label="Pre-Order"
-              className="rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-white hover:text-amber-900 font-bold transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 backdrop-blur-3xl shadow-2xl"
-            >Pre-Order</Button>
+              aria-label="Join the Waitlist"
+              className="rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-amber-800 hover:text-amber-900 font-bold transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 backdrop-blur-3xl shadow-2xl"
+            >Join the Waitlist</Button>
           </div>
         </div>
 

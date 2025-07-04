@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Script from 'next/script';
+import AudienceTheme from '@/components/audience-theme';
 
 export const metadata: Metadata = {
   title: 'The AI Forest',
@@ -33,10 +34,10 @@ export default function RootLayout({
           />
         )}
       </head>
-      <body className="font-body antialiased bg-white">
+        <body className="font-body antialiased bg-white">
           {children}
           <Toaster />
-      </body>
+        </body>
     </html>
   );
 }

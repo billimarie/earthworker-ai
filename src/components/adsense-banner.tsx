@@ -30,7 +30,7 @@ export default function AdsenseBanner({ impactData }: AdsenseBannerProps) {
   const netProfit = (impactData?.adRevenue || 0) - (impactData?.operationalCosts || 0);
 
   return (
-    <Card>
+    <Card className="w-full md:w-1/2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Our Regenerative Funding Model</CardTitle>

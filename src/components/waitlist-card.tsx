@@ -58,7 +58,7 @@ export default function WaitlistCard() {
   };
 
   return (
-    <Card>
+    <Card className="flex-1 flex flex-col gap-6 justify-center items-center p-4 glass-card bg-gradient-to-br from-purple-600/20 via-indigo-600/20 to-blue-600/20 backdrop-blur-3xl shadow-2xl rounded-3xl p-6 overflow-hidden border border-white/10">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Join the Waitlist</CardTitle>

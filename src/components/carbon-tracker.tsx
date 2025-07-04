@@ -44,7 +44,7 @@ export default function CarbonTracker({ impactData }: CarbonTrackerProps) {
   const { sqFtRegenerated, netCarbon, netWater, biodiversitySpeciesSupported } = impactData;
 
   return (
-    <Card>
+    <Card className="w-full sm:w-1/2">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Our Impact Metrics</CardTitle>

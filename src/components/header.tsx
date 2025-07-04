@@ -3,17 +3,30 @@
 import { useState } from "react";
 import { Leaf, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { audienceVariants } from "@/lib/audienceVariants";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const audience = searchParams.get("audience") || "default";
 
   return (
     <header className="flex items-center justify-between gap-3 border-b px-4 md:px-8 py-4 relative z-50">
       {/* Logo + Name */}
       <div className="flex items-center gap-3">
-        <Leaf className="h-7 w-7 text-primary" />
-        <h1 className="text-lg font-medium tracking-loose text-foreground text-transparent bg-clip-text bg-gradient-to-tl from-violet-950 via-indigo-900 to-blue-900">
-          the ai forest
+        {audienceVariants[audience]?.icon
+          ? (
+              <span className="text-2xl">
+                {audienceVariants[audience].icon}
+              </span>
+            )
+          : (
+              <Leaf className="h-7 w-7 text-primary" />
+            )
+        }
+        <h1 className="text-lg font-medium tracking-loose">
+          <span className={`${audienceVariants[audience].accentColor}`}>the ai forest</span>
         </h1>
       </div>
 
@@ -103,7 +116,7 @@ export default function Header() {
         onClick={() => setMenuOpen(true)}
         aria-label="Open menu"
       >
-        <Menu className="h-6 w-6" />
+        <Menu className="h-6 w-6  text-gray-600" />
       </button>
 
       {/* Mobile Menu Overlay */}
@@ -129,7 +142,7 @@ export default function Header() {
                 aria-label="Close menu"
                 className="hover:bg-muted p-1 rounded-md"
               >
-                <X className="h-6 w-6" />
+                <X className="h-6 w-6 text-gray-400" />
               </button>
             </div>
 

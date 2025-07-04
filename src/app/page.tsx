@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, type FormEvent } from "react";
-import { LoaderCircle, Send } from "lucide-react";
+import { LoaderCircle, Send, Trees } from "lucide-react";
 
 import {
   handleQuery,
@@ -22,6 +22,12 @@ import { useToast } from "@/hooks/use-toast";
 import type { ImpactData } from "@/services/impact-service";
 import WaitlistCard from "@/components/waitlist-card";
 import ChrysalisCoinsDisplay from "@/components/chrysalis-coins-display";
+import { useSearchParams } from "next/navigation";
+import { audienceVariants } from "@/lib/audienceVariants";
+
+import VanillaTilt from 'vanilla-tilt';
+import { cn } from '@/lib/utils';
+import type { TiltOptions } from 'vanilla-tilt';
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -30,7 +36,8 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [impactData, setImpactData] = useState<ImpactData | null>(null);
   const { toast } = useToast();
-
+  const searchParams = useSearchParams();
+  const audience = searchParams.get("audience") || "default";
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -118,6 +125,28 @@ export default function Home() {
     setInput("");
   };
 
+  const tiltRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tiltNode = tiltRef.current;
+    if (tiltNode) {
+      const options: TiltOptions = {
+        max: 25,
+        speed: 500,
+        perspective: 1800,
+        glare: true,
+        'max-glare': 0.25,
+        scale: 1.05,
+      };
+      VanillaTilt.init(tiltNode, options);
+    }
+    return () => {
+      if (tiltNode && (tiltNode as any).vanillaTilt) {
+        (tiltNode as any).vanillaTilt.destroy();
+      }
+    };
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       
@@ -127,30 +156,55 @@ export default function Home() {
         
         <div className="h-screen w-full flex flex-col gap-6 px-4 md:px-8 justify-center mx-auto text-center">
 
-          <div className="active:translate-y-1 active:scale-95 transform transition-transform duration-150 ease-out"><ChrysalisCoinsDisplay /></div>
+          <div className="flex justify-center scale-75 active:translate-y-1 active:scale-50 transform transition-transform duration-150 ease-out">
+            <div
+              ref={tiltRef}
+              className={cn(
+                "glass relative block w-full max-w-[320px] aspect-square rounded-full overflow-hidden bg-cover bg-center",
+                // Default shadows and transforms
+                "shadow-[0_0_0_2px_rgba(255,214,102,0.4),0_0_3px_3px_rgba(255,214,102,0.2)]",
+                "transform transition-transform duration-150 ease-out",
+                // Hover lifts up
+                "hover:-translate-y-1 hover:shadow-[0_0_0_3px_rgba(255,214,102,0.6),0_0_10px_12px_rgba(255,214,102,0.25)]",
+                "active:transform active:transition-transform active:duration-150 active:ease-in-out active:opacity-80"
+                )}
+              style={{ marginTop:"-150px" }}
+              >
+      
+              <div className="transform transition-transform duration-150 ease-out absolute inset-[20px] rounded-full pointer-events-none z-10 shadow-[inset_0.5px_0.5px_1.5px_rgba(255,235,180,0.6),_inset_-1px_-1px_1px_rgba(160,110,0,0.5),_inset_3px_3px_6px_rgba(0,0,0,0.25)] border border-orange-300/20"></div>
+    
+              <div className="z-90 inner-glass absolute top-0 bottom-0 right-0 left-0 inset-[20px] rounded-full overflow-hidden flex flex-col justify-center items-center p-6 text-center w-full h-full">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-700/90 via-yellow-500/80 to-amber-800 pointer-events-none z-10 rounded-full"></div>
 
-          <h2 className="text-2xl md:text-3xl font-emibold tracking-tight text-primary text-gray-600">Introducing the world's first artificially intelligent micro forest: backed by solar power, guided by neural networks, and built on living data.</h2>
-
-          <div className="pt-6 flex flex-row justify-center space-x-6">
-            <Button
-              variant="ghost"
-              size="lg"
-              aria-label="Read the Black Paper"
-              className="text-gray-500 hover:bg-transparent hover:underline"
-            >Read the Black Paper</Button>
-            <Button
-              type="submit"
-              size="lg"
-              aria-label="Join the Waitlist"
-              className="rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-amber-800 hover:text-amber-900 font-bold transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 backdrop-blur-3xl shadow-2xl"
-            >Join the Waitlist</Button>
+                  <div className="relative z-20 text-slate-50 [text-shadow:0_1px_2px_rgba(0,0,0,0.5)]">
+                    <Trees className="w-40 h-40 text-amber-700/90 stroke-1 text-center mx-auto" />
+                  </div>
+              </div>
           </div>
         </div>
 
-        <aside className="flex flex-col sm:flex-row gap-8 flex-wrap mx-auto w-full justify-center">
-          <CarbonTracker impactData={impactData} className="flex-1 flex flex-col gap-6 justify-center items-center p-4 glass-card bg-gradient-to-br from-purple-600/20 via-indigo-600/20 to-blue-600/20 backdrop-blur-3xl shadow-2xl rounded-3xl p-6 overflow-hidden border border-white/10" />
-          <AdsenseBanner />
-        </aside>
+        <h2 className="text-2xl md:text-3xl font-emibold tracking-tight text-primary text-gray-600">Introducing the world's first artificially intelligent micro forest: backed by solar power, guided by neural networks, and built on living data.</h2>
+
+        <div className="pt-6 flex flex-col md:flex-row justify-center space-x-6">
+          <Button
+            variant="ghost"
+            size="lg"
+            aria-label="Read the Black Paper"
+            className="text-gray-500 hover:bg-transparent hover:underline"
+          >Read the Black Paper</Button>
+          <Button
+            type="submit"
+            size="lg"
+            aria-label="Join the Waitlist"
+            className="rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 hover:text-amber-900 font-bold transition-all duration-300 ease-in-out border-none shadow-[inset_2px_2px_4px_rgba(160,110,0,0.6),inset_-2px_-2px_4px_rgba(255,245,200,0.5),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-gradient-to-br hover:from-yellow-200 hover:to-yellow-400 hover:shadow-[inset_2px_2px_5px_rgba(160,110,0,0.5),inset_-2px_-2px_5px_rgba(255,245,200,0.6),0_2px_4px_rgba(0,0,0,0.15)] hover:-translate-y-0.5 active:bg-gradient-to-br active:from-yellow-400 active:to-yellow-600 active:shadow-[inset_-2px_-2px_4px_rgba(160,110,0,0.6),inset_2px_2px_4px_rgba(255,245,200,0.5)] active:translate-y-0 backdrop-blur-3xl shadow-2xl"
+          >Join the Waitlist</Button>
+        </div>
+      </div>
+
+      <aside className="flex flex-col sm:flex-row flex-wrap mx-auto w-full justify-center gap-6">
+        <CarbonTracker impactData={impactData} />
+        <AdsenseBanner />
+      </aside>
 
         <footer className="mx-auto max-w-1/3">
           <WaitlistCard />

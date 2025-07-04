@@ -6,6 +6,28 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    "text-emerald-400",
+    "text-amber-300",
+    "text-rose-400",
+    "text-lime-400",
+    "text-violet-500",
+    "text-yellow-400",
+    "text-sky-300",
+    "text-blue-400",
+    "text-green-400",
+    "text-neutral-200",
+    "bg-emerald-400",
+    "bg-amber-300",
+    "bg-rose-400",
+    "bg-lime-400",
+    "bg-violet-500",
+    "bg-yellow-400",
+    "bg-sky-300",
+    "bg-blue-400",
+    "bg-green-400",
+    "bg-neutral-200"
+  ],
   theme: {
     extend: {
       fontFamily: {

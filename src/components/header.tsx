@@ -1,32 +1,30 @@
 "use client";
-
 import { useState } from "react";
 import { Leaf, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { audienceVariants } from "@/lib/audienceVariants";
 
-export default function Header() {
+export default function Header({ audience = "default" }: { audience?: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const audience = searchParams.get("audience") || "default";
+  const variant = audienceVariants[audience] ?? audienceVariants["default"];
 
   return (
     <header className="flex items-center justify-between gap-3 border-b px-4 md:px-8 py-4 relative z-50">
-      {/* Logo + Name */}
-      <div className="flex items-center gap-3">
-        {audienceVariants[audience]?.icon
-          ? (
-              <span className="text-2xl">
-                {audienceVariants[audience].icon}
-              </span>
-            )
-          : (
-              <Leaf className="h-7 w-7 text-primary" />
-            )
-        }
+      {/* Logo */}
+      <div className="flex items-center gap-2">
+        {variant?.icon ? (
+          <span className="text-2xl">{variant.icon}</span>
+        ) : (
+          <Leaf className="h-7 w-7 text-primary" />
+        )}
         <h1 className="text-lg font-medium tracking-loose">
-          <span className={`${audienceVariants[audience].accentColor}`}>the ai forest</span>
+          <span
+            className={
+              variant?.accentColor ? variant.accentColor : "text-primary"
+            }
+          >
+            the ai forest
+          </span>
         </h1>
       </div>
 

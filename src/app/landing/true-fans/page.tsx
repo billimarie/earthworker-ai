@@ -1,15 +1,16 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+
+import { useSearchParams } from "next/navigation";
+
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import WaitlistCard from "@/components/waitlist-card";
 import { useEffect, useState, Suspense } from "react";
 import { fetchImpactData } from "@/app/actions";
 import type { ImpactData } from "@/services/impact-service";
-import { useSearchParams } from "next/navigation";
 
 function TrueFansLandingContent() {
   const [impactData, setImpactData] = useState<ImpactData | null>(null);
@@ -26,7 +27,6 @@ function TrueFansLandingContent() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
 
       <main className="flex-1 flex flex-col gap-8 px-4 md:px-8 mb-20">
 
@@ -345,11 +345,9 @@ No matter how you choose to join, you are already part of this story.</p>
 
       </main>
 
-      <Footer />
     </div>
   );
 }
-
 
 export default function TrueFansLandingPage() {
   return (

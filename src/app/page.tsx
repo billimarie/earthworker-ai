@@ -13,6 +13,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
+import Hero from "@/components/hero";
 import Footer from "@/components/footer";
 import CarbonTracker from "@/components/carbon-tracker";
 import AdsenseBanner from "@/components/adsense-banner";
@@ -181,7 +182,7 @@ export default function Home() {
           </div>
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-emibold tracking-tight text-primary text-gray-600">Introducing the world's first artificially intelligent micro forest: backed by solar power, guided by neural networks, and built on living data.</h2>
+        <Hero audience={audience} />
 
         <div className="pt-6 flex flex-col md:flex-row justify-center space-x-6">
           <Button

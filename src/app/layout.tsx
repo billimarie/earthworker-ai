@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   description: "AI with a focus on sustainability and carbon offsetting.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = headers();
+  const headersList = await headers();
   const url = headersList.get("x-next-url") || "";
   const search = url.includes("?") ? url.split("?")[1] : "";
   const searchParams = new URLSearchParams(search);

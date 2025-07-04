@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import Script from 'next/script';
 import AudienceTheme from '@/components/audience-theme';
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: 'The AI Forest',
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
         <body className="font-body antialiased bg-white">
           {children}
+          <Analytics />
           <Toaster />
         </body>
     </html>

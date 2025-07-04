@@ -1,4 +1,3 @@
-// ./landing/true-fans/page.tsx
 
 "use client";
 
@@ -6,15 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import CarbonTracker from "@/components/carbon-tracker";
 import WaitlistCard from "@/components/waitlist-card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { fetchImpactData } from "@/app/actions";
 import type { ImpactData } from "@/services/impact-service";
 import { useSearchParams } from "next/navigation";
-import { audienceVariants } from "@/lib/audienceVariants";
 
-export default function TrueFansLanding() {
+function TrueFansLandingContent() {
   const [impactData, setImpactData] = useState<ImpactData | null>(null);
   const searchParams = useSearchParams();
   const audience = searchParams.get("audience") || "default";
@@ -350,5 +347,14 @@ No matter how you choose to join, you are already part of this story.</p>
 
       <Footer />
     </div>
+  );
+}
+
+
+export default function TrueFansLandingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TrueFansLandingContent />
+    </Suspense>
   );
 }

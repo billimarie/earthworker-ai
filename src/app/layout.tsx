@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/header";
+import Profile from "@/components/profile";
+import ActivityFeed from "@/components/activity-feed";
 import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
@@ -53,6 +55,10 @@ export default async function RootLayout({
       </head>
       <body className="font-body antialiased bg-white">
         <Header audience={audience} />
+        <div className="w-full lg:max-w-7xl mx-auto">
+          <Profile />
+          <ActivityFeed />
+        </div>
         {children}
         <Footer />
         <Analytics />

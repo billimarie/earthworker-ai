@@ -23,7 +23,7 @@ export default function Header({ audience = "default" }: { audience?: string }) 
               variant?.accentColor ? variant.accentColor : "text-primary"
             }
           >
-            the ai forest
+            Earthworker
           </span>
         </h1>
       </div>
